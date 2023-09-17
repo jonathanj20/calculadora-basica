@@ -15,8 +15,15 @@ const btnMultiplicacion = document.getElementById('btnMultiplicacion');
 const btnDivision= document.getElementById('btnDivision');
 const btnResultado = document.getElementById('btnResultado');
 const btnCE = document.getElementById('btnCE');
+const btnC = document.getElementById('btnC');
+const btnBorrar = document.getElementById('btnBorrar');
+const btnPunto = document.getElementById('btnPunto');
+const btnMasMenos = document.getElementById('btnMasMenos');
 const textoOperacion = document.getElementById('textoOperacion');
+
 let textoResultado = '0';
+let operacion = '';
+let operacionAsignada = false;
 
 boton1.addEventListener("click", (e) => {
     e.preventDefault();
@@ -69,6 +76,10 @@ boton0.addEventListener("click",(e) => {
     escribirNumero('0');
 });
 
+btnPunto.addEventListener("click", () => {
+    campoTexto.value+='.';
+});
+
 btnSuma.addEventListener("click", () => {
     textoOperacion.innerHTML = 'ANS= '+textoResultado;
     escribirOperacion('+');
@@ -89,14 +100,41 @@ btnDivision.addEventListener("click", () => {
     escribirOperacion('/');
 });
 
+btnMasMenos.addEventListener("click", () => {
+    asignarNegativoPositivo();
+});
+
+//REVISAR ESTE BOTON
 btnCE.addEventListener("click", () => {
-    eliminarNumero();
+    campoTexto.value = '';
+});
+
+btnC.addEventListener("click", () => {
+    textoResultado = 0;
+    campoTexto.value = '';
+    textoOperacion.innerHTML = 'ANS= '+textoResultado;
 });
 
 btnResultado.addEventListener('click',() => {
     textoOperacion.innerHTML = campoTexto.value+' = ';
+    operacion+=campoTexto.value;
     campoTexto.value = eval(campoTexto.value);
     textoResultado = campoTexto.value;
+    operacionAsignada = false;
+});
+
+btnBorrar.addEventListener("click", () => { 
+    /**El método substring sirve para cortar o extraer el fragmento de una
+     * cadena. recibe dos parámetros: 
+     * - el índice de la cadena desde donde empezerá a cortar.
+     * - y el final de donde terminará de extraer.
+     */
+    if(campoTexto.value[campoTexto.value.length-1] === '+' || campoTexto.value[campoTexto.value.length-1] === '-' || 
+        campoTexto.value[campoTexto.value.length-1] === '/' ||campoTexto.value[campoTexto.value.length-1] === '*'){
+        operacionAsignada = false;
+    }
+
+    campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
 });
 
 function escribirNumero(numero){
@@ -132,41 +170,50 @@ function escribirNumero(numero){
             campoTexto.value+='9';
             break;
     }
+    operacionAsignada = false;
 }
 
 function escribirOperacion(operacion){
-    switch(operacion){
-        case '+':
-            campoTexto.value+='+';
-            break;
-        case '*':
-            campoTexto.value+='*';
-            break;
-        case '-':
-            campoTexto.value+='-';
-            break;
-        case '/':
-            campoTexto.value+='/';
-            break;
+    if(!operacionAsignada){
+        switch(operacion){
+            case '+':
+                campoTexto.value+='+';
+                break;
+            case '*':
+                campoTexto.value+='*';
+                break;
+            case '-':
+                campoTexto.value+='-';
+                break;
+            case '/':
+                campoTexto.value+='/';
+                break;
+        }
+        operacionAsignada = true;
     }
 }
 
-function eliminarNumero(){
-    /**El método substring sirve para cortar o extraer el fragmento de una
-     * cadena. recibe dos parámetros: 
-     * - el índice de la cadena desde donde empezerá a cortar.
-     * - y el final de donde terminará de extraer.
-     */
+function asignarNegativoPositivo(){
+    //busca el último número ingresado
+    let ultimoNumero = '';
     for(let i = campoTexto.value.length-1; i >= 0; i--){
         if(campoTexto.value[i] != '*' && 
         campoTexto.value[i] != '+' && 
         campoTexto.value[i] != '-' && 
         campoTexto.value[i] != '/'){
-            campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length - 1);
+            ultimoNumero+=campoTexto.value[i];
+            //va eliminado el número
+            campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
         } else {
             break;
         }
     }
+
+    let ultimoNumeroReverseado = ultimoNumero.split('').reverse().join('');
+
+    if(parseFloat(ultimoNumeroReverseado) > 0){
+        campoTexto.value += `(-${ultimoNumeroReverseado.toString()})`;
+    } else {
+        //falta convertirlo a positivo
+    }
 }
-
-
