@@ -19,11 +19,13 @@ const btnC = document.getElementById('btnC');
 const btnBorrar = document.getElementById('btnBorrar');
 const btnPunto = document.getElementById('btnPunto');
 const btnMasMenos = document.getElementById('btnMasMenos');
+const btnPorcentaje = document.getElementById('btnPorcentaje');
 const textoOperacion = document.getElementById('textoOperacion');
 
 let textoResultado = '0';
 let operacion = '';
 let operacionAsignada = false;
+let porcentaje = ''
 
 boton1.addEventListener("click", (e) => {
     e.preventDefault();
@@ -107,12 +109,14 @@ btnMasMenos.addEventListener("click", () => {
 //REVISAR ESTE BOTON
 btnCE.addEventListener("click", () => {
     campoTexto.value = '';
+    operacionAsignada = false;
 });
 
 btnC.addEventListener("click", () => {
     textoResultado = 0;
     campoTexto.value = '';
     textoOperacion.innerHTML = 'ANS= '+textoResultado;
+    operacionAsignada = false;
 });
 
 btnResultado.addEventListener('click',() => {
@@ -135,6 +139,27 @@ btnBorrar.addEventListener("click", () => {
     }
 
     campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
+});
+
+
+btnPorcentaje.addEventListener("click", () => {
+    //busca el último número ingresado
+    let ultimoNumero = ''
+    for(let i = campoTexto.value.length-1; i >= 0; i--){
+        if(campoTexto.value[i] != '*' && 
+        campoTexto.value[i] != '+' && 
+        campoTexto.value[i] != '-' && 
+        campoTexto.value[i] != '/'){
+            ultimoNumero+=campoTexto.value[i];
+            campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
+        } else {
+            break;
+        }
+    }
+
+    let ultimoNumeroReverseado = ultimoNumero.split('').reverse().join('');
+    porcentaje = ultimoNumeroReverseado+'/100';
+    campoTexto.value += eval(porcentaje);
 });
 
 function escribirNumero(numero){
@@ -193,13 +218,15 @@ function escribirOperacion(operacion){
     }
 }
 
+//optimizar esta función
 function asignarNegativoPositivo(){
-    //busca el último número ingresado
+    //esta variable es para guardar el último número ingresado
     let ultimoNumero = '';
+    //busca el último número ingresado y va eliminado cada dígito, hasta que se termine y cuentre un signo.
     for(let i = campoTexto.value.length-1; i >= 0; i--){
         if(campoTexto.value[i] != '*' && 
         campoTexto.value[i] != '+' && 
-        campoTexto.value[i] != '-' && 
+        //campoTexto.value[i] != '-' && 
         campoTexto.value[i] != '/'){
             ultimoNumero+=campoTexto.value[i];
             //va eliminado el número
@@ -210,10 +237,12 @@ function asignarNegativoPositivo(){
     }
 
     let ultimoNumeroReverseado = ultimoNumero.split('').reverse().join('');
+    let numeroPositivo = '';
 
     if(parseFloat(ultimoNumeroReverseado) > 0){
-        campoTexto.value += `(-${ultimoNumeroReverseado.toString()})`;
-    } else {
-        //falta convertirlo a positivo
+        campoTexto.value += `-${ultimoNumeroReverseado.toString()}`;
+    } else if(parseFloat(ultimoNumeroReverseado) <= 0){
+        numeroPositivo = eval('ultimoNumeroReverseado * -1');
+        campoTexto.value+=numeroPositivo;   
     }
 }

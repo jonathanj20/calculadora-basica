@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://kit.fontawesome.com/675de417d6.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="calculadora">
         <div class="operaciones">
-            <p id="textoOperacion"></p>
+            <p id="textoOperacion" class="textoOperacion"></p>
         </div>
         <div class="campo-texto">
-            <input type="text" id="campoTexto">
+            <input type="text" id="campoTexto" class="campoTexto">
         </div>
         <div class="botones">
             <div class="fila-uno">
-                <button>%</button>
+                <button id="btnPorcentaje">%</button>
                 <button id="btnCE">CE</button>
                 <button id="btnC">C</button>
                 <button id="btnBorrar"><i class="fa-solid fa-delete-left"></i></button>
@@ -46,7 +47,7 @@
                 <button id="btnDivision"><i class="fa-solid fa-divide"></i></button>
             </div>
             <div class="fila-6">
-                <button id="btnResultado">=</button>
+                <button id="btnResultado" class="btnResultado">=</button>
             </div>
         </div>
     </div>
