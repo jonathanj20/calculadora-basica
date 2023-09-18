@@ -1,18 +1,4 @@
 let campoTexto = document.getElementById('campoTexto');
-const boton1 = document.getElementById('boton1');
-const boton2 = document.getElementById('boton2');
-const boton3 = document.getElementById('boton3');
-const boton4 = document.getElementById('boton4');
-const boton5 = document.getElementById('boton5');
-const boton6 = document.getElementById('boton6');
-const boton7 = document.getElementById('boton7');
-const boton8 = document.getElementById('boton8');
-const boton9 = document.getElementById('boton9');
-const boton0 = document.getElementById('boton0');
-const btnSuma = document.getElementById('btnSuma');
-const btnResta = document.getElementById('btnResta');
-const btnMultiplicacion = document.getElementById('btnMultiplicacion');
-const btnDivision= document.getElementById('btnDivision');
 const btnResultado = document.getElementById('btnResultado');
 const btnCE = document.getElementById('btnCE');
 const btnC = document.getElementById('btnC');
@@ -21,92 +7,39 @@ const btnPunto = document.getElementById('btnPunto');
 const btnMasMenos = document.getElementById('btnMasMenos');
 const btnPorcentaje = document.getElementById('btnPorcentaje');
 const textoOperacion = document.getElementById('textoOperacion');
+const btnNumeros = document.querySelectorAll(".numeros");
+const btnOperaciones = document.querySelectorAll(".operaciones"); 
 
 let textoResultado = '0';
 let operacion = '';
 let operacionAsignada = false;
-let porcentaje = ''
+let porcentaje = '';
 
-boton1.addEventListener("click", (e) => {
-    e.preventDefault();
-    escribirNumero('1');
+/*se recorre la colección HTML de los botones, y va detectando que numero se va
+presionando*/
+btnNumeros.forEach((numero) => {
+    numero.addEventListener("click", () => {
+        escribirNumero(numero.value);
+    });
 });
 
-boton2.addEventListener("click",(e) => {
-    e.preventDefault();
-    escribirNumero('2');
-});
-
-boton3.addEventListener("click",(e) => {
-    e.preventDefault();
-    escribirNumero('3');
-});
-
-boton4.addEventListener("click",(e) => {
-    e.preventDefault();
-    escribirNumero('4');
-});
-
-boton5.addEventListener("click",(e) => {
-    e.preventDefault();
-    escribirNumero('5');
-});
-
-boton6.addEventListener("click",(e) => {
-    e.preventDefault();
-    escribirNumero('6');
-});
-
-boton7.addEventListener("click",(e) => {
-    e.preventDefault();
-    escribirNumero('7');
-});
-
-
-boton8.addEventListener("click",(e) => {
-    e.preventDefault();
-    escribirNumero('8');
-});
-
-boton9.addEventListener("click",(e) => {
-    e.preventDefault();
-    escribirNumero('9');
-});
-
-boton0.addEventListener("click",(e) => {
-    e.preventDefault();
-    escribirNumero('0');
+/*se recorre la colección HTML de los botones, y va detectando que operacion se va
+presionando*/
+btnOperaciones.forEach((operacion) => {
+    operacion.addEventListener("click", () => {
+        textoOperacion.innerHTML = 'ANS= '+textoResultado;
+        escribirOperacion(operacion.value);
+    });
 });
 
 btnPunto.addEventListener("click", () => {
     campoTexto.value+='.';
 });
 
-btnSuma.addEventListener("click", () => {
-    textoOperacion.innerHTML = 'ANS= '+textoResultado;
-    escribirOperacion('+');
-});
-
-btnResta.addEventListener("click", () => {
-    textoOperacion.innerHTML = 'ANS= '+textoResultado
-    escribirOperacion('-');
-});
-
-btnMultiplicacion.addEventListener("click", () => {
-    textoOperacion.innerHTML = 'ANS= '+textoResultado;
-    escribirOperacion('*');
-});
-
-btnDivision.addEventListener("click", () => {
-    textoOperacion.innerHTML = 'ANS= '+textoResultado;
-    escribirOperacion('/');
-});
-
 btnMasMenos.addEventListener("click", () => {
     asignarNegativoPositivo();
 });
 
-//REVISAR ESTE BOTON
 btnCE.addEventListener("click", () => {
     campoTexto.value = '';
     operacionAsignada = false;
