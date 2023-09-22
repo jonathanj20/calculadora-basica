@@ -1,4 +1,4 @@
-let campoTexto = document.getElementById('campoTexto');
+const campoTexto = document.getElementById('campoTexto');
 const btnResultado = document.getElementById('btnResultado');
 const btnCE = document.getElementById('btnCE');
 const btnC = document.getElementById('btnC');
@@ -14,6 +14,7 @@ let textoResultado = '0';
 let operacion = '';
 let operacionAsignada = false;
 let porcentaje = '';
+let pusoPunto = false;
 
 /*se recorre la colección HTML de los botones, y va detectando que numero se va
 presionando*/
@@ -33,7 +34,10 @@ btnOperaciones.forEach((operacion) => {
 });
 
 btnPunto.addEventListener("click", () => {
-    campoTexto.value+='.';
+    if(!pusoPunto){
+        campoTexto.value+='.';
+        pusoPunto = true;
+    }
 });
 
 btnMasMenos.addEventListener("click", () => {
@@ -58,6 +62,7 @@ btnResultado.addEventListener('click',() => {
     campoTexto.value = eval(campoTexto.value);
     textoResultado = campoTexto.value;
     operacionAsignada = false;
+    pusoPunto = false;
 });
 
 btnBorrar.addEventListener("click", () => { 
@@ -77,20 +82,20 @@ btnBorrar.addEventListener("click", () => {
 
 btnPorcentaje.addEventListener("click", () => {
     //busca el último número ingresado
-    let ultimoNumero = ''
-    for(let i = campoTexto.value.length-1; i >= 0; i--){
-        if(campoTexto.value[i] != '*' && 
-        campoTexto.value[i] != '+' && 
-        campoTexto.value[i] != '-' && 
-        campoTexto.value[i] != '/'){
-            ultimoNumero+=campoTexto.value[i];
-            campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
-        } else {
-            break;
-        }
-    }
+    // let ultimoNumero = ''
+    // for(let i = campoTexto.value.length-1; i >= 0; i--){
+    //     if(campoTexto.value[i] != '*' && 
+    //     campoTexto.value[i] != '+' && 
+    //     campoTexto.value[i] != '-' && 
+    //     campoTexto.value[i] != '/'){
+    //         ultimoNumero+=campoTexto.value[i];
+    //         campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
+    //     } else {
+    //         break;
+    //     }
+    // }
 
-    let ultimoNumeroReverseado = ultimoNumero.split('').reverse().join('');
+    let ultimoNumeroReverseado = obtenerUltimoNumero().split('').reverse().join('');
     porcentaje = ultimoNumeroReverseado+'/100';
     campoTexto.value += eval(porcentaje);
 });
@@ -148,34 +153,52 @@ function escribirOperacion(operacion){
                 break;
         }
         operacionAsignada = true;
+        pusoPunto = false;
     }
 }
 
-//optimizar esta función
 function asignarNegativoPositivo(){
-    //esta variable es para guardar el último número ingresado
+    //la variable ultimoNumeroReverseado invierte el número para se guarde el número original y no invertido
+    let ultimoNumeroReverseado = obtenerUltimoNumero().split('').reverse().join('');
+    let numeroPositivo = '';
+
+    if(parseFloat(ultimoNumeroReverseado) > 0){
+        for(let i = campoTexto.value.length-1; i >= 0; i--){
+            if(campoTexto.value[i] === '+'){
+                campoTexto.value[i].replace('+', '');
+            }
+        }
+        campoTexto.value += `-${ultimoNumeroReverseado.toString()}`;
+    } else if(parseFloat(ultimoNumeroReverseado) <= 0){
+        console.log('es menor');
+        numeroPositivo = eval('ultimoNumeroReverseado * -1');
+        console.log(numeroPositivo);
+        campoTexto.value+=numeroPositivo;  
+    }
+}
+
+function obtenerUltimoNumero(){
+    //esta variable es para guardar el último número ingresado, pero lo va a almacenando de forma invertida
     let ultimoNumero = '';
+
     //busca el último número ingresado y va eliminado cada dígito, hasta que se termine y cuentre un signo.
     for(let i = campoTexto.value.length-1; i >= 0; i--){
         if(campoTexto.value[i] != '*' && 
         campoTexto.value[i] != '+' && 
-        //campoTexto.value[i] != '-' && 
+        campoTexto.value[i] != '-' && 
         campoTexto.value[i] != '/'){
             ultimoNumero+=campoTexto.value[i];
-            //va eliminado el número
+            //va eliminando el número
             campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
         } else {
+            //añade el signo negativo también para que lo incluya 
+            if(campoTexto.value[i] === '-'){
+                ultimoNumero+=campoTexto.value[i];
+                campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
+            } 
             break;
         }
     }
 
-    let ultimoNumeroReverseado = ultimoNumero.split('').reverse().join('');
-    let numeroPositivo = '';
-
-    if(parseFloat(ultimoNumeroReverseado) > 0){
-        campoTexto.value += `-${ultimoNumeroReverseado.toString()}`;
-    } else if(parseFloat(ultimoNumeroReverseado) <= 0){
-        numeroPositivo = eval('ultimoNumeroReverseado * -1');
-        campoTexto.value+=numeroPositivo;   
-    }
+    return ultimoNumero;
 }
