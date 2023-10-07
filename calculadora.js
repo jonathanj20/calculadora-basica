@@ -81,20 +81,6 @@ btnBorrar.addEventListener("click", () => {
 
 
 btnPorcentaje.addEventListener("click", () => {
-    //busca el último número ingresado
-    // let ultimoNumero = ''
-    // for(let i = campoTexto.value.length-1; i >= 0; i--){
-    //     if(campoTexto.value[i] != '*' && 
-    //     campoTexto.value[i] != '+' && 
-    //     campoTexto.value[i] != '-' && 
-    //     campoTexto.value[i] != '/'){
-    //         ultimoNumero+=campoTexto.value[i];
-    //         campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
-    //     } else {
-    //         break;
-    //     }
-    // }
-
     let ultimoNumeroReverseado = obtenerUltimoNumero().split('').reverse().join('');
     porcentaje = ultimoNumeroReverseado+'/100';
     campoTexto.value += eval(porcentaje);
@@ -170,9 +156,7 @@ function asignarNegativoPositivo(){
         }
         campoTexto.value += `-${ultimoNumeroReverseado.toString()}`;
     } else if(parseFloat(ultimoNumeroReverseado) <= 0){
-        console.log('es menor');
         numeroPositivo = eval('ultimoNumeroReverseado * -1');
-        console.log(numeroPositivo);
         campoTexto.value+=numeroPositivo;  
     }
 }
