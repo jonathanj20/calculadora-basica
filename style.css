@@ -72,3 +72,9 @@ button:hover{
 .btnResultado:hover{
     background-color: #f24d4d;
 }
+
+@media screen and (max-width: 1240px){
+    .calculadora{
+        width: 20em;
+    }
+}
