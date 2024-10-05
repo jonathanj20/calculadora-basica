@@ -70,15 +70,9 @@ btnResultado.addEventListener('click', () => {
 });
 
 btnBorrar.addEventListener("click", () => {
-    /**El método substring sirve para cortar o extraer el fragmento de una
-     * cadena. recibe dos parámetros: 
-     * - el índice de la cadena desde donde empezerá a cortar.
-     * - y el final de donde terminará de extraer.
-     */
-
-    if (campoTexto.value[campoTexto.value.length - 1] === '+' || campoTexto.value[campoTexto.value.length - 1] === '-' ||
-        campoTexto.value[campoTexto.value.length - 1] === '/' || campoTexto.value[campoTexto.value.length - 1] === '*') {
+    if (operaciones.includes(campoTexto.value[campoTexto.value.length - 1])) {
         operacionAsignada = false;
+        console.log(operacionAsignada);
     }
 
     campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length - 1);
