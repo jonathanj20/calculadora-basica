@@ -32,9 +32,6 @@ button{
 
 button:hover{
     background-color: #525bb9;
-}
-
-button:hover{
     cursor: pointer;
 }
 

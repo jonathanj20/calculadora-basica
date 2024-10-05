@@ -8,13 +8,15 @@ const btnMasMenos = document.getElementById('btnMasMenos');
 const btnPorcentaje = document.getElementById('btnPorcentaje');
 const textoOperacion = document.getElementById('textoOperacion');
 const btnNumeros = document.querySelectorAll(".numeros");
-const btnOperaciones = document.querySelectorAll(".operaciones"); 
+const btnOperaciones = document.querySelectorAll(".operaciones");
+const operaciones = ['+', '-', '/', '*'];
 
 let textoResultado = '0';
 let operacion = '';
 let operacionAsignada = false;
 let porcentaje = '';
 let pusoPunto = false;
+
 
 /*se recorre la colección HTML de los botones, y va detectando que numero se va
 presionando*/
@@ -28,14 +30,14 @@ btnNumeros.forEach((numero) => {
 presionando*/
 btnOperaciones.forEach((operacion) => {
     operacion.addEventListener("click", () => {
-        textoOperacion.innerHTML = 'ANS= '+textoResultado;
+        textoOperacion.innerHTML = 'ANS= ' + textoResultado;
         escribirOperacion(operacion.value);
     });
 });
 
 btnPunto.addEventListener("click", () => {
-    if(!pusoPunto){
-        campoTexto.value+='.';
+    if (!pusoPunto) {
+        campoTexto.value += '.';
         pusoPunto = true;
     }
 });
@@ -52,137 +54,123 @@ btnCE.addEventListener("click", () => {
 btnC.addEventListener("click", () => {
     textoResultado = 0;
     campoTexto.value = '';
-    textoOperacion.innerHTML = 'ANS= '+textoResultado;
+    textoOperacion.innerHTML = 'ANS= ' + textoResultado;
     operacionAsignada = false;
 });
 
-btnResultado.addEventListener('click',() => {
-    textoOperacion.innerHTML = campoTexto.value+' = ';
-    operacion+=campoTexto.value;
-    campoTexto.value = eval(campoTexto.value);
-    textoResultado = campoTexto.value;
-    operacionAsignada = false;
-    pusoPunto = false;
+btnResultado.addEventListener('click', () => {
+    if (!operacionAsignada) {
+        textoOperacion.innerHTML = campoTexto.value + ' = ';
+        operacion += campoTexto.value;
+        campoTexto.value = eval(campoTexto.value);
+        textoResultado = campoTexto.value;
+        operacionAsignada = false;
+        pusoPunto = false;
+    }
 });
 
-btnBorrar.addEventListener("click", () => { 
+btnBorrar.addEventListener("click", () => {
     /**El método substring sirve para cortar o extraer el fragmento de una
      * cadena. recibe dos parámetros: 
      * - el índice de la cadena desde donde empezerá a cortar.
      * - y el final de donde terminará de extraer.
      */
-    if(campoTexto.value[campoTexto.value.length-1] === '+' || campoTexto.value[campoTexto.value.length-1] === '-' || 
-        campoTexto.value[campoTexto.value.length-1] === '/' ||campoTexto.value[campoTexto.value.length-1] === '*'){
+
+    if (campoTexto.value[campoTexto.value.length - 1] === '+' || campoTexto.value[campoTexto.value.length - 1] === '-' ||
+        campoTexto.value[campoTexto.value.length - 1] === '/' || campoTexto.value[campoTexto.value.length - 1] === '*') {
         operacionAsignada = false;
     }
 
-    campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
+    campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length - 1);
 });
 
 
 btnPorcentaje.addEventListener("click", () => {
-    let ultimoNumeroReverseado = obtenerUltimoNumero().split('').reverse().join('');
-    porcentaje = ultimoNumeroReverseado+'/100';
-    campoTexto.value += eval(porcentaje);
+    if (campoTexto.value.length > 0 && operacionAsignada === false) {
+        let ultimoNumeroReverseado = obtenerUltimoNumero().split('').reverse().join('');
+        porcentaje = ultimoNumeroReverseado + '/100';
+        campoTexto.value += eval(porcentaje);
+    }
 });
 
-function escribirNumero(numero){
-    switch(numero){
-        case '0':
-            campoTexto.value+='0';
-            break;
-        case '1':
-            campoTexto.value+='1';
-            break;
-        case '2':
-            campoTexto.value+='2';
-            break;
-        case '3':
-            campoTexto.value+='3';
-            break;
-        case '4':
-            campoTexto.value+='4';
-            break;
-        case '5':
-            campoTexto.value+='5';
-            break;
-        case '6':
-            campoTexto.value+='6';
-            break;
-        case '7':
-            campoTexto.value+='7';
-            break;
-        case '8':
-            campoTexto.value+='8';
-            break;
-        case '9':
-            campoTexto.value+='9';
-            break;
+function escribirNumero(numero) {
+    for (let i = 0; i <= 9; i++) {
+        if (numero === i.toString()) {
+            campoTexto.value += numero;
+        }
     }
+
     operacionAsignada = false;
 }
 
-function escribirOperacion(operacion){
-    if(!operacionAsignada){
-        switch(operacion){
-            case '+':
-                campoTexto.value+='+';
-                break;
-            case '*':
-                campoTexto.value+='*';
-                break;
-            case '-':
-                campoTexto.value+='-';
-                break;
-            case '/':
-                campoTexto.value+='/';
-                break;
+function escribirOperacion(operacion) {
+    if (!operacionAsignada) {
+        for (let op of operaciones) {
+            if (operacion === op) {
+                campoTexto.value += op;
+            }
         }
+
         operacionAsignada = true;
         pusoPunto = false;
     }
 }
 
-function asignarNegativoPositivo(){
-    //la variable ultimoNumeroReverseado invierte el número para se guarde el número original y no invertido
-    let ultimoNumeroReverseado = obtenerUltimoNumero().split('').reverse().join('');
-    let numeroPositivo = '';
+function asignarNegativoPositivo() {
+    //let ultimoNumeroReverseado = obtenerUltimoNumero().split('').reverse().join('');
+    let ultimoNumero = '';
+    let tieneOperaciones = false;
 
-    if(parseFloat(ultimoNumeroReverseado) > 0){
-        for(let i = campoTexto.value.length-1; i >= 0; i--){
-            if(campoTexto.value[i] === '+'){
-                campoTexto.value[i].replace('+', '');
-            }
+    for (let caracter of campoTexto.value) {
+        if (operaciones.includes(caracter)) {
+            tieneOperaciones = true;
         }
-        campoTexto.value += `-${ultimoNumeroReverseado.toString()}`;
-    } else if(parseFloat(ultimoNumeroReverseado) <= 0){
-        numeroPositivo = eval('ultimoNumeroReverseado * -1');
-        campoTexto.value+=numeroPositivo;  
+    }
+
+    if (tieneOperaciones) {
+        for (let i = campoTexto.value.length - 1; i >= 0; i--) {
+            if (operaciones.includes(campoTexto.value[i])) {
+                determinarSigno(campoTexto.value[i], ultimoNumero);
+                break;
+            }
+
+            ultimoNumero += campoTexto.value[i];
+            campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length - 1);
+        }
+    } else {
+        campoTexto.value = "-" + campoTexto.value;
     }
 }
 
-function obtenerUltimoNumero(){
-    //esta variable es para guardar el último número ingresado, pero lo va a almacenando de forma invertida
+function obtenerUltimoNumero() {
     let ultimoNumero = '';
 
-    //busca el último número ingresado y va eliminado cada dígito, hasta que se termine y cuentre un signo.
-    for(let i = campoTexto.value.length-1; i >= 0; i--){
-        if(campoTexto.value[i] != '*' && 
-        campoTexto.value[i] != '+' && 
-        campoTexto.value[i] != '-' && 
-        campoTexto.value[i] != '/'){
-            ultimoNumero+=campoTexto.value[i];
-            //va eliminando el número
-            campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
-        } else {
-            //añade el signo negativo también para que lo incluya 
-            if(campoTexto.value[i] === '-'){
-                ultimoNumero+=campoTexto.value[i];
-                campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length-1);
-            } 
+    for (let i = campoTexto.value.length - 1; i >= 0; i--) {
+        if (operaciones.includes(campoTexto.value[i])) {
             break;
         }
+
+        ultimoNumero += campoTexto.value[i];
+        campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length - 1);
     }
 
     return ultimoNumero;
+}
+
+
+function determinarSigno(signo, ultimoNumero) {
+    switch (signo) {
+        case "+":
+            campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length - 1);
+            campoTexto.value += "-" + ultimoNumero.split("").reverse().join("");
+            break;
+        case "-":
+            campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length - 1);
+            campoTexto.value += "+" + ultimoNumero.split("").reverse().join("");
+            break;
+        case "*":
+        case "/":
+            campoTexto.value += "-" + ultimoNumero.split("").reverse().join("");
+            break;
+    }
 }
