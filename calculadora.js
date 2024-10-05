@@ -72,7 +72,6 @@ btnResultado.addEventListener('click', () => {
 btnBorrar.addEventListener("click", () => {
     if (operaciones.includes(campoTexto.value[campoTexto.value.length - 1])) {
         operacionAsignada = false;
-        console.log(operacionAsignada);
     }
 
     campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length - 1);
