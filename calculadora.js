@@ -1,11 +1,14 @@
+const botones = [
+    { elemento: document.getElementById('btnPunto'), accion: ponerPunto },
+    { elemento: document.getElementById('btnMasMenos'), accion: asignarNegativoPositivo },
+    { elemento: document.getElementById('btnCE'), accion: reiniciarCalculadora },
+    { elemento: document.getElementById("btnC"), accion: borrarOperacion },
+    { elemento: document.getElementById("btnResultado"), accion: calcularResultado },
+    { elemento: document.getElementById('btnBorrar'), accion: borrarCaracter },
+    { elemento: document.getElementById('btnPorcentaje'), accion: calcularPorcentaje }
+];
+
 const campoTexto = document.getElementById('campoTexto');
-const btnResultado = document.getElementById('btnResultado');
-const btnCE = document.getElementById('btnCE');
-const btnC = document.getElementById('btnC');
-const btnBorrar = document.getElementById('btnBorrar');
-const btnPunto = document.getElementById('btnPunto');
-const btnMasMenos = document.getElementById('btnMasMenos');
-const btnPorcentaje = document.getElementById('btnPorcentaje');
 const textoOperacion = document.getElementById('textoOperacion');
 const btnNumeros = document.querySelectorAll(".numeros");
 const btnOperaciones = document.querySelectorAll(".operaciones");
@@ -17,17 +20,7 @@ let operacionAsignada = false;
 let porcentaje = '';
 let pusoPunto = false;
 
-
-/*se recorre la colección HTML de los botones, y va detectando que numero se va
-presionando*/
-btnNumeros.forEach((numero) => {
-    numero.addEventListener("click", () => {
-        escribirNumero(numero.value);
-    });
-});
-
-/*se recorre la colección HTML de los botones, y va detectando que operacion se va
-presionando*/
+/*Se les agrega el evento click a cada botón*/
 btnOperaciones.forEach((operacion) => {
     operacion.addEventListener("click", () => {
         textoOperacion.innerHTML = 'ANS= ' + textoResultado;
@@ -35,30 +28,29 @@ btnOperaciones.forEach((operacion) => {
     });
 });
 
-btnPunto.addEventListener("click", () => {
+btnNumeros.forEach(numero => numero.addEventListener("click", () => escribirNumero(numero.value)));
+botones.forEach(boton => boton.elemento.addEventListener("click", boton.accion));
+
+function ponerPunto() {
     if (!pusoPunto) {
         campoTexto.value += '.';
         pusoPunto = true;
     }
-});
+}
 
-btnMasMenos.addEventListener("click", () => {
-    asignarNegativoPositivo();
-});
-
-btnCE.addEventListener("click", () => {
+function reiniciarCalculadora() {
     campoTexto.value = '';
     operacionAsignada = false;
-});
+}
 
-btnC.addEventListener("click", () => {
+function borrarOperacion() {
     textoResultado = 0;
     campoTexto.value = '';
     textoOperacion.innerHTML = 'ANS= ' + textoResultado;
     operacionAsignada = false;
-});
+}
 
-btnResultado.addEventListener('click', () => {
+function calcularResultado() {
     if (!operacionAsignada) {
         textoOperacion.innerHTML = campoTexto.value + ' = ';
         operacion += campoTexto.value;
@@ -67,24 +59,23 @@ btnResultado.addEventListener('click', () => {
         operacionAsignada = false;
         pusoPunto = false;
     }
-});
+}
 
-btnBorrar.addEventListener("click", () => {
+function borrarCaracter() {
     if (operaciones.includes(campoTexto.value[campoTexto.value.length - 1])) {
         operacionAsignada = false;
     }
 
     campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length - 1);
-});
+}
 
-
-btnPorcentaje.addEventListener("click", () => {
+function calcularPorcentaje() {
     if (campoTexto.value.length > 0 && operacionAsignada === false) {
         let ultimoNumeroReverseado = obtenerUltimoNumero().split('').reverse().join('');
         porcentaje = ultimoNumeroReverseado + '/100';
         campoTexto.value += eval(porcentaje);
     }
-});
+}
 
 function escribirNumero(numero) {
     for (let i = 0; i <= 9; i++) {
@@ -110,7 +101,6 @@ function escribirOperacion(operacion) {
 }
 
 function asignarNegativoPositivo() {
-    //let ultimoNumeroReverseado = obtenerUltimoNumero().split('').reverse().join('');
     let ultimoNumero = '';
     let tieneOperaciones = false;
 
