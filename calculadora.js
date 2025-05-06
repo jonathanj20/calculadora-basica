@@ -41,6 +41,7 @@ function ponerPunto() {
 function reiniciarCalculadora() {
     campoTexto.value = '';
     operacionAsignada = false;
+    pusoPunto = false;
 }
 
 function borrarOperacion() {
@@ -48,6 +49,7 @@ function borrarOperacion() {
     campoTexto.value = '';
     textoOperacion.innerHTML = 'ANS= ' + textoResultado;
     operacionAsignada = false;
+    pusoPunto = false
 }
 
 function calcularResultado() {
@@ -57,7 +59,7 @@ function calcularResultado() {
         campoTexto.value = eval(campoTexto.value);
         textoResultado = campoTexto.value;
         operacionAsignada = false;
-        pusoPunto = false;
+        pusoPunto = campoTexto.value.includes(".");
     }
 }
 
@@ -78,26 +80,18 @@ function calcularPorcentaje() {
 }
 
 function escribirNumero(numero) {
-    for (let i = 0; i <= 9; i++) {
-        if (numero === i.toString()) {
-            campoTexto.value += numero;
-        }
-    }
-
+    campoTexto.value += numero
     operacionAsignada = false;
 }
 
 function escribirOperacion(operacion) {
-    if (!operacionAsignada) {
-        for (let op of operaciones) {
-            if (operacion === op) {
-                campoTexto.value += op;
-            }
-        }
-
-        operacionAsignada = true;
-        pusoPunto = false;
+    if (operacionAsignada) {
+        campoTexto.value = campoTexto.value.substring(0, campoTexto.value.length - 1);
     }
+
+    campoTexto.value += operacion
+    operacionAsignada = true;
+    pusoPunto = false;
 }
 
 function asignarNegativoPositivo() {
